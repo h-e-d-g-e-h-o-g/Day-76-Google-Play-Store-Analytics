@@ -1,0 +1,137 @@
+In this lesson, I've learned about sample().
+With the help of this function, I can get random rows from the dataframe.
+syntax:- df.sample(n)
+n means number of rows that I want.
+To drop columns from row, we need to follow a syntax:-
+Syntax:- df.drop(columns=["column_name"], axis=1, inplace=True)
+This will drop all the columns that are mentioned in the columns argument.
+axis parameter decides which to drop, axis=0 for rows and axis=1 for columns.
+
+To find the repeated data in the dataframe, we need to use "duplicated()" method.
+It will return a series that will reflect the duplicated data in the form of "True" and "False".
+We can get all the rows in which we have found the duplicated data.
+Syntax:- duplicated_row = df[df.duplicated()]
+
+Now, to drop the duplicated_row, we need to use drop_duplicate().
+We can't use straight up "df.drop_duplicate()."
+Because, it will check basis of each and every column.
+Now, to make sure to compare with some only specific column, we can use subset argument.
+In which you need to mention the name of the columns.
+syntax:- df.drop_duplicate([subset=["column_name"]])
+
+plotly is a open source data visualisation library for creating interactive and visually appealing graphs and charts.
+To create graphs and charts in plotly, we need to import plotly.
+Syntax:- import plotly.express as px.
+
+To create pie chart using plotly, we use pie() method.
+px.pie(labels=?, values=?)
+names argument is used for setting the text labels, that are displayed alongside the pie chart's slices.
+values argument is used to specify the numerical values.
+title argument is used to set the title of the pie chart.
+If we want to configure other aspects of pie chart, that we can't see in the method pie().
+We can use "update_trace()" method, It can be used for modifying the appearances, styles of figure.
+
+describe() method is used to give statistical overview on each column of dataframe.
+info() method is used to give information about each and every column of dataframe such as their name, non-null count
+and datatype.
+
+astype() method is used for changing the datatype of a series or dataframe into a certain datatype.
+Then we have used str.replace(), here, str is a placeholder for string literal or string object.
+
+To create bar chart, we use px.bar()
+syntax:- px.bar(x=data, y=data, title="Title of the bar chart")
+To create horizontal bar chart, you need to use "orientation" argument that will set it to "h".
+fig = px.scatter(x=app_df["App"],
+                 y=app_df["Installs"],
+                 size=app_df["Installs"],
+                 color=app_df["Installs"],
+                 hover_name=app_df.index,
+                 title='Category Concentration'
+                 )
+
+scatter.update_layout(xaxis_title="Number of Apps (Lower=More Concentrated)",
+                      yaxis_title="Installs",
+                      yaxis=dict(type='log'))
+
+fig.update_layout(xaxis_title="Number of Apps(Lower=More Concentrated)", yaxis_title="Installs", yaxis=dict(type='log'))
+size argument means the size of the markers on the scatter plot based on the App column value.
+hover_name argument means when you hover over the marker then, it will display the index(Category) of the dataframe.
+color argument is used to set the colors of the markers of the scatter plot.
+scatter.update_layout() method is used to set the layout of the scatter plot.
+It takes arguments such as xaxis_title & yaxis_title.
+yaxis=dict(type='log') means to set the yaxis to have logarithmic scale.
+Lograithmic scale means each equal interval represents a multiplicative factor.
+For example:- (1 and 5) have the same space as much as (5 and 25) and (25 and 125).
+Linear scale means each equal interval represents an equal difference in values. (Like 1 and 2 space == 10 and 11)
+
+#####  stack = df_apps_data_clean.Genres.str.split(";", expand=True).stack()  #####
+Here, we have Genres column that contains multiple genres that are separated by ";".
+We need to separate string into multiple substrings using the ";".
+expand=True argument is used to return the result as DataFrame rather than Series.
+The column in the DataFrame will represent the substrings.
+Then, we have used stack() method, stack method will melt the dataframe.
+The dataframe before the stack() method has multiple columns representing each substrings.
+When we apply the stack method on dataframe, it will convert all the multiple columns into single column.
+
+fig = px.bar(x=num_genres.index[:15],
+             y=num_genres.values[:15],
+             title="Top Genres",
+             hover_name=num_genres.index[:15],
+             color=num_genres.values[:15],
+             color_continuous_scale="Agsunset")
+
+hover_name argument is used to specify what will appear when you hover over a specific bar.
+color argument is used to specify what will be the color of each bar.
+
+color_continuous_scale="Agsunset" parameter is used to set the color scale of the bar chart.
+It will decide how the bar will be colored based on their values.
+
+fig.update_layout(xaxis_title="Genres",
+                  yaxis_title="Number of Apps",
+                  coloraxis_showscale=False)
+
+xaxis_title is used to set the title of x-axis of the bar chart and same goes for y-axis.
+coloraxis_showscale parameter is used to decide whether the color scale will be displayed alongside the chart or not.
+color scale means the scale at which colors are decided.
+
+df_free_vs_paid = df_apps_clean.groupby(["Category", "Type"], as_index=False).agg({'App': pd.Series.count})
+Here, we first group the data on the basis of the unique values of Category then Type.
+Here, we use as_index=False, so the resulted dataframe would not consider the columns as index.
+
+g_bar = px.bar(df_free_vs_paid,
+               x='Category',
+               y='App',
+               title='Free vs Paid Apps by Category',
+               color='Type',
+               barmode='group')
+
+barmode argument setting to "group" means, bar with the same x-axis data are grouped side by side.
+
+g_bar.update_layout(xaxis_title='Category',
+                    yaxis_title='Number of Apps',
+                    xaxis={'categoryorder':'total descending'},
+                    yaxis=dict(type='log'))
+
+xaxis={'categoryorder':'total descending'} argument is used to set the order in which Category will appear on x-axis.
+It is set to "total descending" means the category which has highest number of apps will appear first then the second 
+and so on.
+
+box = px.box(df_apps_clean,
+             y='Installs',
+             x='Type',
+             color='Type',
+             notched=True,
+             points='all',
+             title='How Many Downloads are Paid Apps Giving Up?')
+ 
+box.update_layout(yaxis=dict(type='log'))
+ 
+box.show()
+
+Here, we are creating a box plot by using box() method.
+boxes are used to visualise the statistical concepts out of the data present in the dataframe.
+color='Type' argument is used to give color to the boxes on the basis of 'Type' column.
+notched=True argument is used to add notches to the boxes that can be used to compare medians.
+points argument is used to add the individual data points into the plot.
+
+NOTE:- categoryorder='min ascending' argument is used to set the category on x-axis in ascending order.
